@@ -1,0 +1,9 @@
+type SpecialStruct struct {
+        ptr     *error
+        f       float64
+        s       MyStruct
+        sPtr    *MyStruct
+        c       int32
+        flag    bool
+        flag2   bool
+}
