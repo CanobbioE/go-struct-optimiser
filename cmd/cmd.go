@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"io/ioutil"
+	"io"
 	"os"
 )
 
@@ -28,7 +28,7 @@ func Command() *cobra.Command {
 			panic(err)
 		}
 
-		content, err := ioutil.ReadAll(file)
+		content, err := io.ReadAll(file)
 		if err != nil {
 			panic(err)
 		}
@@ -53,7 +53,7 @@ func optimize(types map[anyType]int) [][]anyType {
 func handleFullBlocks(types map[anyType]int) [][]anyType {
 	passes := make([][]anyType, 0)
 	for k, v := range types {
-		if k.isSize(8) || k.isSize(16) {
+		if k.isSize(8) || k.isSize(16) || k.isSize(24) {
 			passes = append(passes, nSizedArray(k, v))
 		}
 	}

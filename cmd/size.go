@@ -1,6 +1,9 @@
 package cmd
 
-import "math"
+import (
+	"math"
+	"strings"
+)
 
 type (
 	anyType string
@@ -8,32 +11,32 @@ type (
 )
 
 func (at anyType) isSize(n size) bool {
-	return sizes()[at] == n
+	return getSize(at) == n
 }
 
-func sizes() map[anyType]size {
-	return map[anyType]size{
-		"bool":     1,
-		"byte":     1,
-		"int32":    4,
-		"float32":  4,
-		"rune":     4,
-		"int64":    8,
-		"int":      8,
-		"float64":  8,
-		"*bool":    8,
-		"*byte":    8,
-		"*int32":   8,
-		"*float32": 8,
-		"*rune":    8,
-		"*int64":   8,
-		"*int":     8,
-		"*float64": 8,
-		"*string":  8,
-		"*error":   8,
-		"string":   16,
-		"error":    16,
+func getSize(t anyType) size {
+	if strings.Index(string(t), "*") == 0 {
+		return 8
 	}
+
+	if strings.Contains(string(t), "[]") {
+		return 24
+	}
+
+	return map[anyType]size{
+		"bool":      1,
+		"byte":      1,
+		"int32":     4,
+		"float32":   4,
+		"rune":      4,
+		"int64":     8,
+		"int":       8,
+		"float64":   8,
+		"uint64":    8,
+		"string":    16,
+		"error":     16,
+		"time.Time": 24,
+	}[t]
 }
 
 func nSizedArray(t anyType, count int) []anyType {
@@ -49,9 +52,9 @@ func bestSize(types map[anyType]int) float64 {
 
 	for k, v := range types {
 		if len(types) == 1 {
-			return float64(int(sizes()[k]) * v)
+			return float64(int(getSize(k)) * v)
 		}
-		tot += int(sizes()[k]) * v
+		tot += int(getSize(k)) * v
 	}
 
 	return math.Ceil(float64(tot)/8) * 8

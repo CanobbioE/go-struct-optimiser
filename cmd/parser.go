@@ -24,6 +24,12 @@ func parseStruct(s string) *structDetails {
 			continue
 		}
 
+		line = strings.TrimSpace(line)
+		line = strings.ReplaceAll(line, "\t", " ")
+		for strings.Contains(line, "  ") {
+			line = strings.ReplaceAll(line, "  ", " www")
+		}
+
 		if strings.Contains(line, "//") {
 			panic("comments are not supported")
 		}
@@ -48,7 +54,7 @@ func parseStruct(s string) *structDetails {
 			count += v
 		}
 		details.countByType[t] = count
-		details.namesByType[t] = strings.Split(varNames, ",")
+		details.namesByType[t] = append(details.namesByType[t], strings.Split(varNames, ",")...)
 	}
 
 	return details

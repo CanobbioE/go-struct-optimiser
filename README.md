@@ -58,3 +58,4 @@ We can now go ahead and replace our old struct with the new and improve one, in 
 - Refactor into packages / segregate logic
 - Unit tests
 - Handle 32 bits architectures
+- Support extra spaces
